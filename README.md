@@ -1,12 +1,11 @@
-```markdown
-# Network Map Toolkit
+## Network Map Toolkit
 
 ![Platform]()
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
-A cross‑platform network transparency toolkit that reveals your device’s true network path – from the kernel’s routing table to the public internet. It combines low‑level system introspection (C collector on Linux, native APIs on other OSes) with egress tests and optional osquery enrichment to produce a single, human‑readable report: `networkmapreport.txt`.
+**Network Map Toolkit** is a cross-platform solution designed to unveil your device’s true network path—from the kernel’s routing table to the public internet. It integrates low-level system introspection (using a C collector on Linux and native APIs on other operating systems) with egress tests and optional osquery enrichment. The result is a single, human-readable report: `networkmapreport.txt`.
 
-Whether you’re a sysadmin debugging a strange connection, a privacy advocate verifying your VPN, or a curious user who wants to see what’s really between your device and the cloud, this toolkit gives you evidence‑quality data without modifying your system.
+Whether you are a sysadmin troubleshooting a peculiar connection, a privacy advocate checking your VPN, or a curious user aiming to uncover the traffic between your device and the cloud, this toolkit offers evidence-quality data without altering your system.
 
 ---
 
@@ -27,22 +26,22 @@ Whether you’re a sysadmin debugging a strange connection, a privacy advocate v
 
 ## Features
 
-- **Cross‑platform** – Works on Linux, Android (via same Linux tools), macOS, and Windows (with fallback command‑line tools).
-- **Low‑level Linux collector** – Uses netlink sockets and `/proc` to read interfaces, routes, addresses, listening sockets, and DNS configuration. Includes a tiny inline assembly example (optional) for demonstration.
-- **Go orchestrator** – Correlates data from the C collector, runs egress tests (UDP source IP, HTTP public IP, traceroute, DNS resolution), and integrates with osquery (if installed) to enrich process information.
-- **Graceful degradation** – Missing tools are noted; the report always states what could and could not be observed.
-- **Tamper‑evident logging** – Optionally send a timestamped, hashed report to a server you control for long‑term transparency archives.
-- **No system modifications** – Reads only; never changes network configuration.
-- **Clear, plain‑language report** – Explains the likely end‑to‑end network path, including evidence of Android/VM/hypervisor layers.
+- **Cross-platform compatibility**: Operates on Linux, Android (utilizing the same Linux tools), macOS, and Windows (with fallback command-line tools).
+- **Low-level Linux collector**: Utilizes netlink sockets and `/proc` to gather information on interfaces, routes, addresses, and DNS configuration. A small inline assembly example is included (optional).
+- **Go orchestrator**: Correlates data from the C collector, executes egress tests (UDP source IP, public HTTP IP, traceroute, DNS resolution), and enhances process information if osquery is installed.
+- **Graceful degradation**: If tools are missing, the report notes what could and could not be observed.
+- **Tamper-evident logging**: Optionally submit a timestamped, hashed report to a server you manage for long-term transparency archives.
+- **No system modifications**: The toolkit only reads data; it never alters your network configuration.
+- **Clear, plain-language report**: Provides an understandable overview of the likely end-to-end network path, highlighting evidence from Android, VM, or hypervisor layers.
 
 ---
 
 ## Requirements
 
-- **Linux / Android**: gcc, go, traceroute (optional), osquery (optional).
-- **macOS**: go, standard command‑line tools (ifconfig, netstat, scutil, lsof). traceroute is usually present.
-- **Windows**: go, PowerShell. For traceroute, `tracert` is built‑in.
-- **All platforms**: sudo (or administrator privileges) is recommended to get the most complete information (e.g., netlink on Linux, raw socket access). Without privileges, the toolkit will still run but may show limited data.
+- **Linux / Android**: Requires gcc, go, and optionally traceroute and osquery.
+- **macOS**: Requires go and standard command-line tools (ifconfig, netstat, scutil, lsof). Traceroute usually comes pre-installed.
+- **Windows**: Requires go and PowerShell. Traceroute is accessible via `tracert`, which is built-in.
+- **All platforms**: For the most comprehensive information (e.g., netlink on Linux, raw socket access), sudo (or administrator privileges) is recommended. The toolkit still runs without privileges but may present limited data.
 
 ---
 
@@ -51,9 +50,9 @@ Whether you’re a sysadmin debugging a strange connection, a privacy advocate v
 1. Clone or copy the three files into a directory on your machine:
    - `netmap_collect.c` – C collector (Linux only)
    - `netmap_report.go` – Go orchestrator (all platforms)
-   - `netmap.sh` – Bootstrap script (optional but convenient)
+   - `netmap.sh` – Bootstrap script (recommended for convenience)
 
-2. Make the bootstrap script executable (if you use it):
+2. Make the bootstrap script executable (if you choose to use it):
    ```bash
    chmod +x netmap.sh
    ```
@@ -62,7 +61,7 @@ Whether you’re a sysadmin debugging a strange connection, a privacy advocate v
    ```bash
    gcc -Wall -O2 -o netmapcollect netmap_collect.c
    ```
-   The Go orchestrator will be compiled automatically when you run it, or you can build it manually:
+   The Go orchestrator compiles automatically when you execute it, or you may build it manually:
    ```bash
    go build -o netmapreport netmap_report.go
    ```
@@ -77,60 +76,60 @@ Whether you’re a sysadmin debugging a strange connection, a privacy advocate v
 sudo ./netmap.sh
 ```
 
-This will:
-- Detect your OS.
-- Run the appropriate collectors.
-- Perform egress tests.
+This command will:
+- Detect your operating system.
+- Execute the appropriate collectors.
+- Conduct egress tests.
 - Write `networkmapreport.txt` in the current directory.
-- Print a summary to the console.
+- Display a summary in the console.
 
 ### Running Individual Components
 
-- **Linux only**: If you just want raw low‑level data, run the C collector directly:
+- **Linux only**: For raw low-level data, directly run the C collector:
   ```bash
   sudo ./netmap_collect
   ```
-- **All platforms**: To run the Go orchestrator without the bootstrap script:
+- **All platforms**: To execute the Go orchestrator without the bootstrap script:
   ```bash
   sudo ./netmap_report
   ```
-- **Enable osquery enrichment**: Install osquery first; the toolkit will automatically detect it.
+- **Enable osquery enrichment**: Install osquery first; the toolkit will automatically recognize it.
 - **Send evidence to a remote server (optional)**:
   ```bash
   sudo ./netmap_report -server https://your-server.com/endpoint
   ```
-  *(The server endpoint must accept plain text POSTs.)*
+  *(The server endpoint should accept plain text POSTs.)*
 
 ---
 
 ## Understanding the Report (`networkmapreport.txt`)
 
-The report is divided into sections:
+The report is organized into sections:
 
-1. **Header** – Timestamp, hostname, OS.
-2. **Low‑level collector output** (Linux only) – Links, addresses, routes, listening sockets, DNS servers (from `/etc/resolv.conf`).
-3. **Platform‑specific fallback data** – If the C collector fails, the report shows output from standard tools (`ip`, `ss`, `netstat`, etc.).
+1. **Header** – Contains a timestamp, hostname, and operating system.
+2. **Low-level collector output** (Linux only) – Displays links, addresses, routes, listening sockets, and DNS servers (extracted from `/etc/resolv.conf`).
+3. **Platform-specific fallback data** – If the C collector fails, output from standard tools (`ip`, `ss`, `netstat`, etc.) is presented.
 4. **Egress tests**:
-   - UDP source IP – The IP used when talking to `8.8.8.8:53` (your apparent IP from your ISP’s perspective, before any NAT).
-   - External IP – Your public IP as seen by `http://httpbin.org/ip` (after any carrier‑grade NAT or VPN).
-   - Traceroute – First few hops to `8.8.8.8` (helps identify middleboxes, VPN endpoints, or hypervisor layers).
-   - DNS resolution – Tests that `google.com` resolves.
-5. **Osquery enrichment** (if available) – Listening ports correlated with running processes, plus detailed interface addresses.
-6. **Optional server log confirmation** – If you used the `-server` flag, the server’s response is shown.
+   - UDP source IP – The IP used when connecting to `8.8.8.8:53` (your apparent IP visible to your ISP, pre-NAT).
+   - External IP – Your public IP as identified by `http://httpbin.org/ip` (after carrier-grade NAT or VPN).
+   - Traceroute – Initial hops to `8.8.8.8` (helps pinpoint middleboxes, VPN endpoints, or hypervisor layers).
+   - DNS resolution – Confirms that `google.com` resolves correctly.
+5. **Osquery enrichment** (if available) – Correlates listening ports with running processes, alongside detailed interface addresses.
+6. **Optional server log confirmation** – If the `-server` flag was used, the server’s response is included.
 
 ---
 
 ## Troubleshooting
 
 | Problem                            | Likely Cause                                | Solution                                                               |
-|-----------------------------------|----------------------------------------------|------------------------------------------------------------------------|
-| `netmapcollect: command not found` | C collector not compiled.                    | Run `gcc -Wall -O2 -o netmapcollect netmap_collect.c`.                |
-| `go: command not found`             | Go not installed.                          | Install Go from [golang.org](https://golang.org).                     |
-| `sudo: netmap.sh: command not found` | Script not executable or not in PATH.      | Use `./netmap.sh` or run with full path.                               |
-| Permission denied (netlink)        | Not running as root.                         | Run with `sudo`.                                                       |
-| Egress tests fail                  | Network offline or firewall blocking.       | Check your internet connection; the tests have short timeouts and will not hang. |
-| No osquery data                   | osquery not installed or not in PATH.       | Install osquery if you need process correlation. The toolkit still works without it. |
-| Android specific quirks           | Android may restrict some `/proc` access.   | The toolkit detects Android and also reads `getprop` DNS; run as root if possible. |
+|-----------------------------------|---------------------------------------------|------------------------------------------------------------------------|
+| `netmapcollect: command not found` | C collector not compiled.                   | Run `gcc -Wall -O2 -o netmapcollect netmap_collect.c`.                |
+| `go: command not found`           | Go not installed.                           | Install Go from [golang.org](https://golang.org).                     |
+| `sudo: netmap.sh: command not found` | Script not executable or not in PATH.     | Use `./netmap.sh` or run it with the full path.                       |
+| Permission denied (netlink)       | Not running as root.                        | Execute with `sudo`.                                                  |
+| Egress tests fail                 | Network offline or firewall blocking.      | Check your internet connection; tests have short timeouts and will not hang. |
+| No osquery data                   | osquery not installed or not in PATH.      | Install osquery if you require process correlation; the toolkit still operates without it. |
+| Android specific quirks           | Android may restrict some `/proc` access.  | The toolkit identifies Android and reads `getprop` DNS; run as root if possible. |
 
 ---
 
@@ -164,20 +163,19 @@ DNS resolved google.com to 142.250.185.78
 
 ## Why This Toolkit?
 
-- **Transparency** – See exactly what your device sees, without assumptions.
-- **Evidence** – Combine low‑level kernel data with external tests to build a reliable picture.
-- **Low‑level control** – The C collector uses netlink directly, bypassing userspace tools that might be influenced by VPNs or proxies.
-- **Portability** – One Go binary runs everywhere; the C collector adds depth on Linux.
+- **Transparency**: Reveals precisely what your device perceives, without conjectures.
+- **Evidence**: Merges low-level kernel data with external tests to form a robust understanding.
+- **Low-level control**: The C collector accesses netlink directly, bypassing userspace tools that might be affected by VPNs or proxies.
+- **Portability**: A single Go binary runs on any platform; the C collector enriches functionality on Linux.
 
 ---
 
 ## License
 
-This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). You are free to use, modify, and distribute it under the terms of this license.
+This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). You are free to use, modify, and distribute it under this license, per its terms.
 
 ---
 
 ## Contributing
 
-Found a bug? Want to add a feature? Open an issue or pull request on the project repository (if hosted). Contributions that maintain the toolkit’s focus on transparency, safety, and cross‑platform support are welcome. (but unlikely, just make your ai hostage write it muhahah)
-```
+If you discover a bug or wish to suggest a feature, open an issue or pull request on the project repository (if hosted). Contributions that maintain the toolkit’s focus on transparency, safety, and cross-platform support are most welcome.
