@@ -89,10 +89,10 @@ case "$OS" in
 esac
 
 if [[ -x ./netmap_report ]]; then
-    ./netmap_report >> "$REPORT" 2>&1
+    ./netmap_report "$@" >> "$REPORT" 2>&1
 else
     echo "Go orchestrator not found; building..." | tee -a "$REPORT"
-    go build -o netmap_report netmap_report.go && ./netmap_report >> "$REPORT" 2>&1
+    go build -o netmap_report netmap_report.go && ./netmap_report "$@" >> "$REPORT" 2>&1
 fi
 
 echo "Done. See $REPORT"

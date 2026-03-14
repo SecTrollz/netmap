@@ -882,3 +882,11 @@ echo "Done. See $REPORT"
 5. Open `networkmapreport.txt` to see the detailed network path.
 
 Everything is self‑contained, handles missing dependencies gracefully, and works across Linux, macOS, and Windows. The code is clean, secure, and ready for real‑world use.
+
+---
+
+## Enhancement Roadmap
+
+For the capability-first roadmap (with concrete command/output examples, monitoring, diff/integrity defaults, and adversarial validation criteria), see:
+
+- `docs/ENHANCEMENT_PLAN.md`
